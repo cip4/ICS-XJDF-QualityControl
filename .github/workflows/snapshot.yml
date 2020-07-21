@@ -119,7 +119,7 @@ jobs:
 
   upload-artifacts:
     runs-on: self-hosted
-      steps:
+    steps:
       # Upload any artefact produced.
       - name: Upload ICS Specification artifact
         uses: actions/upload-artifact@v2

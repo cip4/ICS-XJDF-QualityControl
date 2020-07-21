@@ -96,7 +96,7 @@ jobs:
 
   upload-artifacts:
     runs-on: self-hosted
-      steps:
+    steps:
 
       # Upload the artifact 
       - name: Upload ICS Specification artifact
