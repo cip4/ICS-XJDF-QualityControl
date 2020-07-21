@@ -61,6 +61,23 @@ jobs:
           "$env:XJDF_VERSION $env:VERSION"
           "Run-$env:GITHUB_RUN_NUMBER"         
 
+      # Upload the artifact 
+      - name: Upload ICS Specification artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.BUILD_NAME }}-artifact
+          path: target/*.pdf
+          
+      # Upload the release
+      - name: Upload to release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/*.pdf
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
+
   build-mis:
     # The type of runner that the job will run on
     runs-on: self-hosted  
@@ -93,10 +110,6 @@ jobs:
           "$env:MIS_FILE_NAME $env:XJDF_VERSION $env:VERSION"
           "$env:XJDF_VERSION $env:VERSION"
           "Run-$env:GITHUB_RUN_NUMBER"         
-
-  upload-artifacts:
-    runs-on: self-hosted
-    steps:
 
       # Upload the artifact 
       - name: Upload ICS Specification artifact

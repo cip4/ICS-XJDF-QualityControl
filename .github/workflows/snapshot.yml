@@ -57,6 +57,13 @@ jobs:
           "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
           "Run-$env:GITHUB_RUN_NUMER"
 
+      # Upload any artefact produced.
+      - name: Upload ICS Specification artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.BUILD_NAME }}-artifact
+          path: target/*.pdf
+
   build-customer:
     # The type of runner that the job will run on
     runs-on: self-hosted
@@ -86,6 +93,13 @@ jobs:
           "$env:CUSTOMER_FILE_NAME $env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
           "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
           "Run-$env:GITHUB_RUN_NUMER"
+
+      # Upload any artefact produced.
+      - name: Upload ICS Specification artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.BUILD_NAME }}-artifact
+          path: target/*.pdf
 
   build-mis:
     # The type of runner that the job will run on
@@ -117,9 +131,6 @@ jobs:
           "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
           "Run-$env:GITHUB_RUN_NUMER"
 
-  upload-artifacts:
-    runs-on: self-hosted
-    steps:
       # Upload any artefact produced.
       - name: Upload ICS Specification artifact
         uses: actions/upload-artifact@v2
