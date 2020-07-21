@@ -8,7 +8,7 @@ The book determines which documents are included, the template determines the st
 
 ## Both
 Is the master working copy and contains all documents (including both covers). This should be the only book used for editing.
-* Book: ICS-QC-CUS-MIS.book
+* Book: ICS-QC-Both.book
 * Template: Template_ICS.fm
 
 ## Customer

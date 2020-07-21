@@ -1,0 +1,129 @@
+# This is the basic workflow to build ICS documentation
+
+name: Snapshot Build
+# The VERSION is the main release number i.e. 1.7 or 2.1
+env:      
+  XJDF_VERSION:         '2.0'
+  BUILD_NAME:           ICS-XJDF-QualityControl
+  BOTH_FILE_NAME:       ICS-XJDF-QualityControl - Both
+  BOTH_CONFIG_FILE:     ICS_XJDF_QualityControl_Both.ini
+  CUSTOMER_FILE_NAME:   ICS-XJDF-QualityControl - Cus
+  CUSTOMER_CONFIG_FILE: ICS_XJDF_QualityControl_Customer.ini
+  MIS_FILE_NAME:        ICS-XJDF-QualityControl - MIS
+  MIS_CONFIG_FILE:      ICS_XJDF_QualityControl_MIS.ini
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Manual Run'  
+    
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a multiple jobs
+  
+  build-both:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      # Get the date 
+      - name: Get date
+        run: echo "::set-env name=NOW::$(date -UFormat '%Y%m%d')"
+
+      # Build test - only required to 'see' github's variables.
+      - name: Check Build Variables
+        run:  >
+          python Build\buildtest.py $env:BOTH_CONFIG_FILE
+          "$env:BOTH_FILE_NAME $env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "Run-$env:GITHUB_RUN_NUMBER"
+
+      # Uses the remote self-host to build the ICS
+      - name: Build ICS Specification
+        run:  >
+          python Build\specbuilder.py $env:BOTH_CONFIG_FILE
+          "$env:BOTH_FILE_NAME $env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "Run-$env:GITHUB_RUN_NUMER"
+
+  build-customer:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      # Get the date 
+      - name: Get date
+        run: echo "::set-env name=NOW::$(date -UFormat '%Y%m%d')"
+
+      # Build test - only required to 'see' github's variables.
+      - name: Check Build Variables
+        run:  >
+          python Build\buildtest.py $env:CUSTOMER_CONFIG_FILE
+          "$env:CUSTOMER_FILE_NAME $env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "Run-$env:GITHUB_RUN_NUMBER"
+
+      # Uses the remote self-host to build the ICS
+      - name: Build ICS Specification
+        run:  >
+          python Build\specbuilder.py $env:CUSTOMER_CONFIG_FILE
+          "$env:CUSTOMER_FILE_NAME $env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "Run-$env:GITHUB_RUN_NUMER"
+
+  build-mis:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      # Get the date 
+      - name: Get date
+        run: echo "::set-env name=NOW::$(date -UFormat '%Y%m%d')"
+
+      # Build test - only required to 'see' github's variables.
+      - name: Check Build Variables
+        run:  >
+          python Build\buildtest.py $env:MIS_CONFIG_FILE
+          "$env:MIS_FILE_NAME $env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "Run-$env:GITHUB_RUN_NUMBER"
+
+      # Uses the remote self-host to build the ICS
+      - name: Build ICS Specification
+        run:  >
+          python Build\specbuilder.py $env:MIS_CONFIG_FILE
+          "$env:MIS_FILE_NAME $env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
+          "Run-$env:GITHUB_RUN_NUMER"
+
+  upload-artifacts:
+    runs-on: self-hosted
+      steps:
+      # Upload any artefact produced.
+      - name: Upload ICS Specification artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.BUILD_NAME }}-artifact
+          path: target/*.pdf
+          
