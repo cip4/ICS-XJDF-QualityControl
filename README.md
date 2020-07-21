@@ -1,14 +1,22 @@
-# ICS_XJDF_QualityControl
-Quality Control ICS
+# Quality Control ICS
 
-To allow for variations between the Customer and MIS versions of this ICS there are three Framemaker book files.
+This project builds two release specifications: One for the Customer and one for the MIS.<br/>
+In addition a third, 'Both', development version is created by the CI process for use by the Working Group.
 
-ICS-QC-CUS-MIS.book       Is the master working copy and contains all documents (including both covers).
-                          This should be the only book used for editing.
-                          
-ICS-QC-CUS.book           The Customer version. The book contains only those document required for this version.
-                          Should not be used for editing.
-                          
-ICS-QC-MIS.book           The MIS version. The book contains only those document required for this version.
-                          Should not be used for editing.
-                          
+The content and style of each version is determined by the FrameMaker book and a FrameMaker document used as a template.<br/>
+The book determines which documents are included, the template determines the style and conditional text settings.
+
+## Both
+Is the master working copy and contains all documents (including both covers). This should be the only book used for editing.
+* Book: ICS-QC-CUS-MIS.book
+* Template: Template_ICS.fm
+
+## Customer
+The Customer version. The book contains a subset of documents and should not be used for editing.
+* Book: ICS-QC-CUS.book
+* Template: Template_ICS_Cus.fm
+
+## MIS
+The MIS version. The book contains a subset of documents and should not be used for editing.
+* Book: ICS-QC-MIS.book
+* Template: Template_ICS_MIS.fm                          
