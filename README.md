@@ -1,4 +1,4 @@
-# Quality Control ICS
+# XJDF Quality Control ICS
 The MIS to Quality Control Interoperability Conformance Specification (ICS) defines the exchange of quality control data
 from MIS or print production system to quality measurement devices, using XJDF.
 
