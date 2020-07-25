@@ -30,7 +30,7 @@ jobs:
   
   build-customer:
     # The type of runner that the job will run on
-    runs-on: self-hosted  
+    runs-on: [self-hosted, framemaker-2015]  
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -80,7 +80,7 @@ jobs:
 
   build-mis:
     # The type of runner that the job will run on
-    runs-on: self-hosted  
+    runs-on: [self-hosted, framemaker-2015]  
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
