@@ -3,7 +3,7 @@
 name: Release Build
 # The VERSION is the main release number i.e. 1.7 or 2.1
 env:      
-  XJDF_VERSION:         '2.0'
+  XJDF_VERSION:         '2.1'
   BUILD_NAME:           ICS-XJDF-QualityControl
 #  BOTH_FILE_NAME:       ICS-XJDF-QualityControl - Both
 #  BOTH_CONFIG_FILE:     ICS_XJDF_QualityControl_Both.ini
