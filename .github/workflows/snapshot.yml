@@ -55,7 +55,7 @@ jobs:
           python Build\specbuilder.py $env:BOTH_CONFIG_FILE
           "$env:BOTH_FILE_NAME $env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
           "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
-          "Run-$env:GITHUB_RUN_NUMER"
+          "Run-$env:GITHUB_RUN_NUMBER"
 
       # Upload any artefact produced.
       - name: Upload ICS Specification artifact
@@ -92,7 +92,7 @@ jobs:
           python Build\specbuilder.py $env:CUSTOMER_CONFIG_FILE
           "$env:CUSTOMER_FILE_NAME $env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
           "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
-          "Run-$env:GITHUB_RUN_NUMER"
+          "Run-$env:GITHUB_RUN_NUMBER"
 
       # Upload any artefact produced.
       - name: Upload ICS Specification artifact
@@ -129,7 +129,7 @@ jobs:
           python Build\specbuilder.py $env:MIS_CONFIG_FILE
           "$env:MIS_FILE_NAME $env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
           "$env:XJDF_VERSION Draft-$env:NOW Build-$env:GITHUB_RUN_NUMBER"
-          "Run-$env:GITHUB_RUN_NUMER"
+          "Run-$env:GITHUB_RUN_NUMBER"
 
       # Upload any artefact produced.
       - name: Upload ICS Specification artifact
