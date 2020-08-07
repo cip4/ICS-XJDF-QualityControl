@@ -5,11 +5,11 @@ name: Release Build
 env:      
   XJDF_VERSION:         '2.1'
   BUILD_NAME:           ICS-XJDF-QualityControl
-#  BOTH_FILE_NAME:       ICS-XJDF-QualityControl - Both
+#  BOTH_FILE_NAME:       ICS XJDF QualityControl Both
 #  BOTH_CONFIG_FILE:     ICS_XJDF_QualityControl_Both.ini
-  CUSTOMER_FILE_NAME:   ICS-XJDF-QualityControl - Cus
+  CUSTOMER_FILE_NAME:   ICS XJDF QualityControl Cus
   CUSTOMER_CONFIG_FILE: ICS_XJDF_QualityControl_Customer.ini
-  MIS_FILE_NAME:        ICS-XJDF-QualityControl - MIS
+  MIS_FILE_NAME:        ICS XJDF QualityControl MIS
   MIS_CONFIG_FILE:      ICS_XJDF_QualityControl_MIS.ini
 
 # Controls when the action will run. Triggers the workflow on push or pull request
