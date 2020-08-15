@@ -7,7 +7,7 @@ env:
   BUILD_NAME:           ICS-XJDF-QualityControl
 #  BOTH_FILE_NAME:       ICS XJDF QualityControl Both
 #  BOTH_CONFIG_FILE:     ICS_XJDF_QualityControl_Both.ini
-  CUSTOMER_FILE_NAME:   ICS XJDF QualityControl Cus
+  CUSTOMER_FILE_NAME:   ICS XJDF QualityControl Customer
   CUSTOMER_CONFIG_FILE: ICS_XJDF_QualityControl_Customer.ini
   MIS_FILE_NAME:        ICS XJDF QualityControl MIS
   MIS_CONFIG_FILE:      ICS_XJDF_QualityControl_MIS.ini
@@ -50,7 +50,7 @@ jobs:
         run:  >
           python Build\buildtest.py $env:CUSTOMER_CONFIG_FILE
           "$env:CUSTOMER_FILE_NAME $env:XJDF_VERSION $env:VERSION"
-          "$env:XJDF_VERSION $env:VERSION"
+          "Release: $env:VERSION"
           "Run-$env:GITHUB_RUN_NUMBER"          
 
       # Uses the remote self-host to build the ICS
@@ -58,7 +58,7 @@ jobs:
         run:  >
           python Build\specbuilder.py $env:CUSTOMER_CONFIG_FILE
           "$env:CUSTOMER_FILE_NAME $env:XJDF_VERSION $env:VERSION"
-          "$env:XJDF_VERSION $env:VERSION"
+          "Release: $env:VERSION"
           "Run-$env:GITHUB_RUN_NUMBER"         
 
       # Upload the artifact 
@@ -100,7 +100,7 @@ jobs:
         run:  >
           python Build\buildtest.py $env:MIS_CONFIG_FILE
           "$env:MIS_FILE_NAME $env:XJDF_VERSION $env:VERSION"
-          "$env:XJDF_VERSION $env:VERSION"
+          "Release: $env:VERSION"
           "Run-$env:GITHUB_RUN_NUMBER"          
 
       # Uses the remote self-host to build the ICS
@@ -108,7 +108,7 @@ jobs:
         run:  >
           python Build\specbuilder.py $env:MIS_CONFIG_FILE
           "$env:MIS_FILE_NAME $env:XJDF_VERSION $env:VERSION"
-          "$env:XJDF_VERSION $env:VERSION"
+          "Release: $env:VERSION"
           "Run-$env:GITHUB_RUN_NUMBER"         
 
       # Upload the artifact 
