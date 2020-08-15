@@ -49,7 +49,7 @@ jobs:
       - name: Check Build Variables
         run:  >
           python Build\buildtest.py $env:CUSTOMER_CONFIG_FILE
-          "$env:CUSTOMER_FILE_NAME $env:XJDF_VERSION $env:VERSION"
+          "$env:CUSTOMER_FILE_NAME $env:VERSION"
           "Release: $env:VERSION"
           "Run-$env:GITHUB_RUN_NUMBER"          
 
@@ -57,7 +57,7 @@ jobs:
       - name: Build ICS Specification
         run:  >
           python Build\specbuilder.py $env:CUSTOMER_CONFIG_FILE
-          "$env:CUSTOMER_FILE_NAME $env:XJDF_VERSION $env:VERSION"
+          "$env:CUSTOMER_FILE_NAME $env:VERSION"
           "Release: $env:VERSION"
           "Run-$env:GITHUB_RUN_NUMBER"         
 
@@ -99,7 +99,7 @@ jobs:
       - name: Check Build Variables
         run:  >
           python Build\buildtest.py $env:MIS_CONFIG_FILE
-          "$env:MIS_FILE_NAME $env:XJDF_VERSION $env:VERSION"
+          "$env:MIS_FILE_NAME $env:VERSION"
           "Release: $env:VERSION"
           "Run-$env:GITHUB_RUN_NUMBER"          
 
@@ -107,7 +107,7 @@ jobs:
       - name: Build ICS Specification
         run:  >
           python Build\specbuilder.py $env:MIS_CONFIG_FILE
-          "$env:MIS_FILE_NAME $env:XJDF_VERSION $env:VERSION"
+          "$env:MIS_FILE_NAME $env:VERSION"
           "Release: $env:VERSION"
           "Run-$env:GITHUB_RUN_NUMBER"         
 
