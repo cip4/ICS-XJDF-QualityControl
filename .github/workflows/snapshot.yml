@@ -168,5 +168,5 @@ jobs:
           username: ${{ secrets.CONFLUENCE_USER }}
           password: ${{ secrets.CONFLUENCE_PASSWORD }}
           contentId: 15663320
-          label: 'ics-xjdf-qualitycontrol-mis,ics-snapshot'
+          label: 'ics-xjdf-qualitycontrol-mis,ics-draft'
           filePattern: 'target/*.pdf'
