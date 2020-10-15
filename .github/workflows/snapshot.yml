@@ -72,7 +72,7 @@ jobs:
           username: ${{ secrets.CONFLUENCE_USER }}
           password: ${{ secrets.CONFLUENCE_PASSWORD }}
           contentId: 15663320
-          label: 'ics-xjdf-qualitycontrol-both,ics-snapshot'
+          label: 'ics-xjdf-qualitycontrol-both,ics-draft'
           filePattern: 'target/*.pdf'
   
   build-customer:
@@ -120,7 +120,7 @@ jobs:
           username: ${{ secrets.CONFLUENCE_USER }}
           password: ${{ secrets.CONFLUENCE_PASSWORD }}
           contentId: 15663320
-          label: 'ics-xjdf-qualitycontrol-customer,ics-snapshot'
+          label: 'ics-xjdf-qualitycontrol-customer,ics-draft'
           filePattern: 'target/*.pdf'
 
   build-mis:
