@@ -64,6 +64,17 @@ jobs:
           name: ${{ env.BUILD_NAME }}-artifact
           path: target/*.pdf
 
+      # Upload to Confluence
+      - name: Confluence Upload
+        uses: cip4/action-confluence-upload@master
+        with:
+          url: 'https://confluence.cip4.org'
+          username: ${{ secrets.CONFLUENCE_USER }}
+          password: ${{ secrets.CONFLUENCE_PASSWORD }}
+          contentId: 15663320
+          label: 'ics-xjdf-qualitycontrol-both,ics-snapshot'
+          filePattern: 'target/*.pdf'
+  
   build-customer:
     # The type of runner that the job will run on
     runs-on: [self-hosted, framemaker-2015]
@@ -100,6 +111,17 @@ jobs:
         with:
           name: ${{ env.BUILD_NAME }}-artifact
           path: target/*.pdf
+      
+      # Upload to Confluence
+      - name: Confluence Upload
+        uses: cip4/action-confluence-upload@master
+        with:
+          url: 'https://confluence.cip4.org'
+          username: ${{ secrets.CONFLUENCE_USER }}
+          password: ${{ secrets.CONFLUENCE_PASSWORD }}
+          contentId: 15663320
+          label: 'ics-xjdf-qualitycontrol-customer,ics-snapshot'
+          filePattern: 'target/*.pdf'
 
   build-mis:
     # The type of runner that the job will run on
@@ -138,3 +160,13 @@ jobs:
           name: ${{ env.BUILD_NAME }}-artifact
           path: target/*.pdf
           
+      # Upload to Confluence
+      - name: Confluence Upload
+        uses: cip4/action-confluence-upload@master
+        with:
+          url: 'https://confluence.cip4.org'
+          username: ${{ secrets.CONFLUENCE_USER }}
+          password: ${{ secrets.CONFLUENCE_PASSWORD }}
+          contentId: 15663320
+          label: 'ics-xjdf-qualitycontrol-mis,ics-snapshot'
+          filePattern: 'target/*.pdf'
