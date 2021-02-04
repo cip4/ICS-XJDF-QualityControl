@@ -1,129 +1,158 @@
-# This is the basic workflow to build ICS documentation
-
 name: Release Build
+## This section contains ALL variable specific for this project ##
 # The VERSION is the main release number i.e. 1.7 or 2.1
-env:      
-  XJDF_VERSION:         '2.2'
-  BUILD_NAME:           ICS-XJDF-QualityControl
-#  BOTH_FILE_NAME:       ICS XJDF QualityControl Both
-#  BOTH_CONFIG_FILE:     ICS_XJDF_QualityControl_Both.ini
-  CUSTOMER_FILE_NAME:   ICS XJDF QualityControl Customer
-  CUSTOMER_CONFIG_FILE: ICS_XJDF_QualityControl_Customer.ini
-  MIS_FILE_NAME:        ICS XJDF QualityControl MIS
-  MIS_CONFIG_FILE:      ICS_XJDF_QualityControl_MIS.ini
+env:
+# Common to all builds
+  BUILD_NAME:           ICS-XJDF-QUALITYCONTROL
+  DOCUMENT_VERSION:     '2.0'
+# 'BOTH' version is not built for release documents
+#
+# 'Customer' parameters  
+  CUST_DOCUMENT_FILE_NAME:   ICS XJDF QualityControl Customer
+  CUST_CONFIG_FILE:          Build\ICS_XJDF_QualityControl_Customer.ini
+  CUST_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-Customer,milestone'
+# 'MIS' parameters  
+  MIS_DOCUMENT_FILE_NAME:   ICS XJDF QualityControl MIS
+  MIS_CONFIG_FILE:          Build\ICS_XJDF_QualityControl_MIS.ini
+  MIS_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-mis,milestone'
+# Same ID for all builds  
+  CONFLUENCE_ID:        '15663320'
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+## The remaining section is based upon those common to all draft documentation builds
+## It has been modified to allow for three slightly different builds.
+
+# Controls when the action will run
 on:
   push:
     tags:
       - '*'
 
-  workflow_dispatch:
-    inputs:
-      tags:
-        description: 'Manual Run'  
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains multiple jobs
-  
-  build-customer:
-    # The type of runner that the job will run on
-    runs-on: [self-hosted, framemaker-2015]  
+  build_customer:
+    runs-on: [framemaker-2020]
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # For access to other Git repositories - an access token is required. 
+      - name: Get GitHub Access Token
+        id: access_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.CIP4_GITHUB_ACTIONS_APP_ID }}
+          private_key: ${{ secrets.CIP4_GITHUB_ACTIONS_APP_KEY }} 
+      
+      # Clean up working directory
+      - name: Clean up working directory
+        run:  rm -r -fo *
+        
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout source
         uses: actions/checkout@v2
+        with:
+          path: document
 
-      # Get the date 
-      - name: Get date
-        run: echo "::set-env name=NOW::$(date -UFormat '%Y%m%d')"
-      
-      # Use the build tag as the document version
-      - name: Get build tag
-        run: echo "::set-env name=VERSION::$($env:GITHUB_REF.replace('refs/tags/', ''))"
+      # Check out the build scripts
+      - name: Checkout build scripts
+        uses: actions/checkout@v2
+        with:
+          repository: cip4/cip4-document-builder
+          token: ${{ steps.access_token.outputs.token }}
+          path: builder
 
-      - name: Check Build Variables
-        run:  >
-          python Build\buildtest.py $env:CUSTOMER_CONFIG_FILE
-          "$env:CUSTOMER_FILE_NAME $env:VERSION"
-          "Release: $env:VERSION"
-          "Run-$env:GITHUB_RUN_NUMBER"          
+      - name: Build Document
+        timeout-minutes: 30
+        run: >
+          python ..\builder\specbuilder.py $env:CUST_CONFIG_FILE
+          "$env:CUST_DOCUMENT_FILE_NAME $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "Release $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "Run-$env:GITHUB_RUN_NUMBER"
+        working-directory: ./document
 
-      # Uses the remote self-host to build the ICS
-      - name: Build ICS Specification
-        run:  >
-          python Build\specbuilder.py $env:CUSTOMER_CONFIG_FILE
-          "$env:CUSTOMER_FILE_NAME $env:VERSION"
-          "Release: $env:VERSION"
-          "Run-$env:GITHUB_RUN_NUMBER"         
-
-      # Upload the artifact 
-      - name: Upload ICS Specification artifact
+      # Upload any artefact produced.
+      - name: Upload Document
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.BUILD_NAME }}-artifact
-          path: target/*.pdf
-          
-      # Upload the release
-      - name: Upload to release
-        uses: svenstaro/upload-release-action@v1-release
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target/*.pdf
-          tag: ${{ github.ref }}
-          overwrite: true
-          file_glob: true
+          path: document/target/*.pdf
 
-  build-mis:
-    # The type of runner that the job will run on
-    runs-on: [self-hosted, framemaker-2015]  
+      # Generate full Confluence Labels List
+      - name: Generate Full Confluence Labels List
+        run: >
+          echo "FULL_CONFLUENCE_LABELS=${env:CUST_CONFLUENCE_LABELS},$(${env:GITHUB_REF}.replace('refs/tags/',''))" | 
+          Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          
+      # Upload to Confluence
+      - name: Confluence Upload
+        uses: cip4/action-confluence-upload@master
+        with:
+          url: 'https://confluence.cip4.org'
+          username: ${{ secrets.CONFLUENCE_USER }}
+          password: ${{ secrets.CONFLUENCE_PASSWORD }}
+          contentId: ${{ env.CONFLUENCE_ID }}
+          label:    ${{ env.FULL_CONFLUENCE_LABELS }}
+          filePattern: 'document/target/*.pdf'
+
+  build_mis:
+    runs-on: [framemaker-2020]
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # For access to other Git repositories - an access token is required. 
+      - name: Get GitHub Access Token
+        id: access_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.CIP4_GITHUB_ACTIONS_APP_ID }}
+          private_key: ${{ secrets.CIP4_GITHUB_ACTIONS_APP_KEY }} 
+      
+      # Clean up working directory
+      - name: Clean up working directory
+        run:  rm -r -fo *
+        
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout source
         uses: actions/checkout@v2
+        with:
+          path: document
 
-      # Get the date 
-      - name: Get date
-        run: echo "::set-env name=NOW::$(date -UFormat '%Y%m%d')"
-      
-      # Use the build tag as the document version
-      - name: Get build tag
-        run: echo "::set-env name=VERSION::$($env:GITHUB_REF.replace('refs/tags/', ''))"
+      # Check out the build scripts
+      - name: Checkout build scripts
+        uses: actions/checkout@v2
+        with:
+          repository: cip4/cip4-document-builder
+          token: ${{ steps.access_token.outputs.token }}
+          path: builder
 
-      - name: Check Build Variables
-        run:  >
-          python Build\buildtest.py $env:MIS_CONFIG_FILE
-          "$env:MIS_FILE_NAME $env:VERSION"
-          "Release: $env:VERSION"
-          "Run-$env:GITHUB_RUN_NUMBER"          
+      - name: Build Document
+        timeout-minutes: 30
+        run: >
+          python ..\builder\specbuilder.py $env:MIS_CONFIG_FILE
+          "$env:MIS_DOCUMENT_FILE_NAME $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "Release $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "Run-$env:GITHUB_RUN_NUMBER"
+        working-directory: ./document
 
-      # Uses the remote self-host to build the ICS
-      - name: Build ICS Specification
-        run:  >
-          python Build\specbuilder.py $env:MIS_CONFIG_FILE
-          "$env:MIS_FILE_NAME $env:VERSION"
-          "Release: $env:VERSION"
-          "Run-$env:GITHUB_RUN_NUMBER"         
-
-      # Upload the artifact 
-      - name: Upload ICS Specification artifact
+      # Upload any artefact produced.
+      - name: Upload Document
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.BUILD_NAME }}-artifact
-          path: target/*.pdf
+          path: document/target/*.pdf
+
+      # Generate full Confluence Labels List
+      - name: Generate Full Confluence Labels List
+        run: >
+          echo "FULL_CONFLUENCE_LABELS=${env:MIS_CONFLUENCE_LABELS},$(${env:GITHUB_REF}.replace('refs/tags/',''))" | 
+          Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           
-      # Upload the release
-      - name: Upload to release
-        uses: svenstaro/upload-release-action@v1-release
+      # Upload to Confluence
+      - name: Confluence Upload
+        uses: cip4/action-confluence-upload@master
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target/*.pdf
-          tag: ${{ github.ref }}
-          overwrite: true
-          file_glob: true
+          url: 'https://confluence.cip4.org'
+          username: ${{ secrets.CONFLUENCE_USER }}
+          password: ${{ secrets.CONFLUENCE_PASSWORD }}
+          contentId: ${{ env.CONFLUENCE_ID }}
+          label:    ${{ env.FULL_CONFLUENCE_LABELS }}
+          filePattern: 'document/target/*.pdf'

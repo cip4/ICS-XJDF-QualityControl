@@ -1,19 +1,34 @@
-# This is the basic workflow to build ICS documentation
+# This is the basic workflow to build draft documentation
+
+# !NOTE:
+# This build produces multiple versions of this document!!
 
 name: Snapshot Build
+## This section contains ALL variable specific for this project ##
 # The VERSION is the main release number i.e. 1.7 or 2.1
-env:      
-  XJDF_VERSION:         '2.2'
-  BUILD_NAME:           ICS-XJDF-QualityControl
-  BOTH_FILE_NAME:       ICS XJDF QualityControl Both
-  BOTH_CONFIG_FILE:     ICS_XJDF_QualityControl_Both.ini
-  CUSTOMER_FILE_NAME:   ICS XJDF QualityControl Customer
-  CUSTOMER_CONFIG_FILE: ICS_XJDF_QualityControl_Customer.ini
-  MIS_FILE_NAME:        ICS XJDF QualityControl MIS
-  MIS_CONFIG_FILE:      ICS_XJDF_QualityControl_MIS.ini
+env:
+# Common to all builds
+  BUILD_NAME:           ICS-XJDF-QUALITYCONTROL
+  DOCUMENT_VERSION:     '2.0'
+# 'BOTH' parameters  
+  BOTH_DOCUMENT_FILE_NAME:   ICS XJDF QualityControl Both
+  BOTH_CONFIG_FILE:          Build\ICS_XJDF_QualityControl_Both.ini
+  BOTH_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-both,ics-draft'
+# 'Customer' parameters  
+  CUST_DOCUMENT_FILE_NAME:   ICS XJDF QualityControl Customer
+  CUST_CONFIG_FILE:          Build\ICS_XJDF_QualityControl_Customer.ini
+  CUST_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-Customer,ics-draft'
+# 'MIS' parameters  
+  MIS_DOCUMENT_FILE_NAME:   ICS XJDF QualityControl MIS
+  MIS_CONFIG_FILE:          Build\ICS_XJDF_QualityControl_MIS.ini
+  MIS_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-mis,ics-draft'
+# Same ID for all builds  
+  CONFLUENCE_ID:        '15663320'
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+## The remaining section is based upon those common to all draft documentation builds
+## It has been modified to allow for three slightly different builds.
+
+# Controls when the action will run
 on:
   push:
     branches: [ master ]
@@ -22,143 +37,56 @@ on:
     inputs:
       tags:
         description: 'Manual Run'  
-    
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a multiple jobs
-  
-  build-both:
-    # The type of runner that the job will run on
-    runs-on: [self-hosted, framemaker-2015]
+  build_both:
+    runs-on: [framemaker-2020]
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout source
-        uses: actions/checkout@v2
-
-      # Get the date 
-      - name: Get date
-        run: echo "::set-env name=NOW::$(date -UFormat '%Y%m%d')"
-
-      # Build test - only required to 'see' github's variables.
-      - name: Check Build Variables
-        run:  >
-          python Build\buildtest.py $env:BOTH_CONFIG_FILE
-          "$env:BOTH_FILE_NAME $env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "$env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "Run-$env:GITHUB_RUN_NUMBER"
-
-      # Uses the remote self-host to build the ICS
-      - name: Build ICS Specification
-        run:  >
-          python Build\specbuilder.py $env:BOTH_CONFIG_FILE
-          "$env:BOTH_FILE_NAME $env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "$env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "Run-$env:GITHUB_RUN_NUMBER"
-
-      # Upload any artefact produced.
-      - name: Upload ICS Specification artifact
-        uses: actions/upload-artifact@v2
+      # For access to other Git repositories - an access token is required. 
+      - name: Get GitHub Access Token
+        id: access_token
+        uses: tibdex/github-app-token@v1
         with:
-          name: ${{ env.BUILD_NAME }}-artifact
-          path: target/*.pdf
-
-      # Upload to Confluence
-      - name: Confluence Upload
-        uses: cip4/action-confluence-upload@master
-        with:
-          url: 'https://confluence.cip4.org'
-          username: ${{ secrets.CONFLUENCE_USER }}
-          password: ${{ secrets.CONFLUENCE_PASSWORD }}
-          contentId: 15663320
-          label: 'ics-xjdf-qualitycontrol-both,ics-draft'
-          filePattern: 'target/*.pdf'
-  
-  build-customer:
-    # The type of runner that the job will run on
-    runs-on: [self-hosted, framemaker-2015]
-    
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout source
-        uses: actions/checkout@v2
-
-      # Get the date 
-      - name: Get date
-        run: echo "::set-env name=NOW::$(date -UFormat '%Y%m%d')"
-
-      # Build test - only required to 'see' github's variables.
-      - name: Check Build Variables
-        run:  >
-          python Build\buildtest.py $env:CUSTOMER_CONFIG_FILE
-          "$env:CUSTOMER_FILE_NAME $env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "$env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "Run-$env:GITHUB_RUN_NUMBER"
-
-      # Uses the remote self-host to build the ICS
-      - name: Build ICS Specification
-        run:  >
-          python Build\specbuilder.py $env:CUSTOMER_CONFIG_FILE
-          "$env:CUSTOMER_FILE_NAME $env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "$env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "Run-$env:GITHUB_RUN_NUMBER"
-
-      # Upload any artefact produced.
-      - name: Upload ICS Specification artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.BUILD_NAME }}-artifact
-          path: target/*.pdf
+          app_id: ${{ secrets.CIP4_GITHUB_ACTIONS_APP_ID }}
+          private_key: ${{ secrets.CIP4_GITHUB_ACTIONS_APP_KEY }} 
       
-      # Upload to Confluence
-      - name: Confluence Upload
-        uses: cip4/action-confluence-upload@master
-        with:
-          url: 'https://confluence.cip4.org'
-          username: ${{ secrets.CONFLUENCE_USER }}
-          password: ${{ secrets.CONFLUENCE_PASSWORD }}
-          contentId: 15663320
-          label: 'ics-xjdf-qualitycontrol-customer,ics-draft'
-          filePattern: 'target/*.pdf'
-
-  build-mis:
-    # The type of runner that the job will run on
-    runs-on: [self-hosted, framemaker-2015]
-    
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
+      # Clean up working directory
+      - name: Clean up working directory
+        run:  rm -r -fo *
+        
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout source
         uses: actions/checkout@v2
+        with:
+          path: document
 
-      # Get the date 
-      - name: Get date
-        run: echo "::set-env name=NOW::$(date -UFormat '%Y%m%d')"
+      # Check out the build scripts
+      - name: Checkout build scripts
+        uses: actions/checkout@v2
+        with:
+          repository: cip4/cip4-document-builder
+          token: ${{ steps.access_token.outputs.token }}
+          path: builder
 
-      # Build test - only required to 'see' github's variables.
-      - name: Check Build Variables
-        run:  >
-          python Build\buildtest.py $env:MIS_CONFIG_FILE
-          "$env:MIS_FILE_NAME $env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "$env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
+      # Build the document parameters
+      - name: Build Document
+        timeout-minutes: 30
+        run: >
+          python ..\builder\specbuilder.py $env:BOTH_CONFIG_FILE
+          "$env:BOTH_DOCUMENT_FILE_NAME $env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "Run-$env:GITHUB_RUN_NUMBER"
-
-      # Uses the remote self-host to build the ICS
-      - name: Build ICS Specification
-        run:  >
-          python Build\specbuilder.py $env:MIS_CONFIG_FILE
-          "$env:MIS_FILE_NAME $env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "$env:XJDF_VERSION DRAFT-$env:NOW build-$env:GITHUB_RUN_NUMBER"
-          "Run-$env:GITHUB_RUN_NUMBER"
+        working-directory: ./document
 
       # Upload any artefact produced.
-      - name: Upload ICS Specification artifact
+      - name: Upload Document
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.BUILD_NAME }}-artifact
-          path: target/*.pdf
+          path: document/target/*.pdf
           
       # Upload to Confluence
       - name: Confluence Upload
@@ -167,6 +95,124 @@ jobs:
           url: 'https://confluence.cip4.org'
           username: ${{ secrets.CONFLUENCE_USER }}
           password: ${{ secrets.CONFLUENCE_PASSWORD }}
-          contentId: 15663320
-          label: 'ics-xjdf-qualitycontrol-mis,ics-draft'
-          filePattern: 'target/*.pdf'
+          contentId: ${{ env.CONFLUENCE_ID }}
+          label: ${{ env.BOTH_CONFLUENCE_LABELS }}
+          filePattern: 'document/target/*.pdf'
+
+  build_customer:
+    runs-on: [framemaker-2020]
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # For access to other Git repositories - an access token is required. 
+      - name: Get GitHub Access Token
+        id: access_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.CIP4_GITHUB_ACTIONS_APP_ID }}
+          private_key: ${{ secrets.CIP4_GITHUB_ACTIONS_APP_KEY }} 
+      
+      # Clean up working directory
+      - name: Clean up working directory
+        run:  rm -r -fo *
+        
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout source
+        uses: actions/checkout@v2
+        with:
+          path: document
+
+      # Check out the build scripts
+      - name: Checkout build scripts
+        uses: actions/checkout@v2
+        with:
+          repository: cip4/cip4-document-builder
+          token: ${{ steps.access_token.outputs.token }}
+          path: builder
+
+      # Build the document parameters
+      - name: Build Document
+        timeout-minutes: 30
+        run: >
+          python ..\builder\specbuilder.py $env:CUST_CONFIG_FILE
+          "$env:CUST_DOCUMENT_FILE_NAME $env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "Run-$env:GITHUB_RUN_NUMBER"
+        working-directory: ./document
+
+      # Upload any artefact produced.
+      - name: Upload Document
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.BUILD_NAME }}-artifact
+          path: document/target/*.pdf
+          
+      # Upload to Confluence
+      - name: Confluence Upload
+        uses: cip4/action-confluence-upload@master
+        with:
+          url: 'https://confluence.cip4.org'
+          username: ${{ secrets.CONFLUENCE_USER }}
+          password: ${{ secrets.CONFLUENCE_PASSWORD }}
+          contentId: ${{ env.CONFLUENCE_ID }}
+          label: ${{ env.CUST_CONFLUENCE_LABELS }}
+          filePattern: 'document/target/*.pdf'
+
+  build_mis:
+    runs-on: [framemaker-2020]
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # For access to other Git repositories - an access token is required. 
+      - name: Get GitHub Access Token
+        id: access_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.CIP4_GITHUB_ACTIONS_APP_ID }}
+          private_key: ${{ secrets.CIP4_GITHUB_ACTIONS_APP_KEY }} 
+      
+      # Clean up working directory
+      - name: Clean up working directory
+        run:  rm -r -fo *
+        
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout source
+        uses: actions/checkout@v2
+        with:
+          path: document
+
+      # Check out the build scripts
+      - name: Checkout build scripts
+        uses: actions/checkout@v2
+        with:
+          repository: cip4/cip4-document-builder
+          token: ${{ steps.access_token.outputs.token }}
+          path: builder
+
+      # Build the document parameters
+      - name: Build Document
+        timeout-minutes: 30
+        run: >
+          python ..\builder\specbuilder.py $env:MIS_CONFIG_FILE
+          "$env:MIS_DOCUMENT_FILE_NAME $env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "Run-$env:GITHUB_RUN_NUMBER"
+        working-directory: ./document
+
+      # Upload any artefact produced.
+      - name: Upload Document
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.BUILD_NAME }}-artifact
+          path: document/target/*.pdf
+          
+      # Upload to Confluence
+      - name: Confluence Upload
+        uses: cip4/action-confluence-upload@master
+        with:
+          url: 'https://confluence.cip4.org'
+          username: ${{ secrets.CONFLUENCE_USER }}
+          password: ${{ secrets.CONFLUENCE_PASSWORD }}
+          contentId: ${{ env.CONFLUENCE_ID }}
+          label: ${{ env.MIS_CONFLUENCE_LABELS }}
+          filePattern: 'document/target/*.pdf'
