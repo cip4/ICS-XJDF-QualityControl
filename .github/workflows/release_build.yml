@@ -1,3 +1,7 @@
+# This is the basic workflow to build release documentation
+
+# !NOTE:
+# This build produces multiple versions of this document!!
 name: Release Build
 ## This section contains ALL variable specific for this project ##
 # The VERSION is the main release number i.e. 1.7 or 2.1
