@@ -14,7 +14,7 @@ env:
 # 'Customer' parameters  
   CUST_DOCUMENT_FILE_NAME:   ICS XJDF QualityControl Customer
   CUST_CONFIG_FILE:          Build\ICS_XJDF_QualityControl_Customer.ini
-  CUST_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-Customer,milestone'
+  CUST_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-customer,milestone'
 # 'MIS' parameters  
   MIS_DOCUMENT_FILE_NAME:   ICS XJDF QualityControl MIS
   MIS_CONFIG_FILE:          Build\ICS_XJDF_QualityControl_MIS.ini
