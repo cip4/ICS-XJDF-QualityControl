@@ -24,6 +24,10 @@ env:
   MIS_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-mis,ics-draft'
 # Same ID for all builds  
   CONFLUENCE_ID:        '15663320'
+  
+  DOCUMENT_COPYRIGHT:   'CIP4 Organization, all rights reserved'
+
+  BUILD_UTILITY_EXE: c:\actions-runner\_work\_tool\document-processing\document-processing.exe   
 
 ## The remaining section is based upon those common to all draft documentation builds
 ## It has been modified to allow for three slightly different builds.
@@ -75,11 +79,24 @@ jobs:
       - name: Build Document
         timeout-minutes: 30
         run: >
-          python ..\builder\specbuilder.py $env:BOTH_CONFIG_FILE
+          python ..\builder\scripts\specbuilder.py $env:BOTH_CONFIG_FILE
           "$env:BOTH_DOCUMENT_FILE_NAME $env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "Run-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document
+        
+      # Mark pages with draft watermark
+      - name: Watermark pages
+        run: >
+          ${{ env.BUILD_UTILITY_EXE }} draft "$env:BOTH_DOCUMENT_FILE_NAME*.pdf"
+        working-directory: ./document/target
+        
+      # Update document properties copyright
+      - name: Update copyright
+        run: >
+          ${{ env.BUILD_UTILITY_EXE }} info "$env:BOTH_DOCUMENT_FILE_NAME*.pdf"
+          --copyright "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_COPYRIGHT"
+        working-directory: ./document/target
 
       # Upload any artefact produced.
       - name: Upload Document
@@ -134,11 +151,24 @@ jobs:
       - name: Build Document
         timeout-minutes: 30
         run: >
-          python ..\builder\specbuilder.py $env:CUST_CONFIG_FILE
+          python ..\builder\scripts\specbuilder.py $env:CUST_CONFIG_FILE
           "$env:CUST_DOCUMENT_FILE_NAME $env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "Run-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document
+        
+      # Mark pages with draft watermark
+      - name: Watermark pages
+        run: >
+          ${{ env.BUILD_UTILITY_EXE }} draft "$env:CUST_DOCUMENT_FILE_NAME*.pdf"
+        working-directory: ./document/target
+        
+      # Update document properties copyright
+      - name: Update copyright
+        run: >
+          ${{ env.BUILD_UTILITY_EXE }} info "$env:CUST_DOCUMENT_FILE_NAME*.pdf"
+          --copyright "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_COPYRIGHT"
+        working-directory: ./document/target
 
       # Upload any artefact produced.
       - name: Upload Document
@@ -193,11 +223,24 @@ jobs:
       - name: Build Document
         timeout-minutes: 30
         run: >
-          python ..\builder\specbuilder.py $env:MIS_CONFIG_FILE
+          python ..\builder\scripts\specbuilder.py $env:MIS_CONFIG_FILE
           "$env:MIS_DOCUMENT_FILE_NAME $env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:DOCUMENT_VERSION DRAFT-$((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "Run-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document
+        
+      # Mark pages with draft watermark
+      - name: Watermark pages
+        run: >
+          ${{ env.BUILD_UTILITY_EXE }} draft "$env:MIS_DOCUMENT_FILE_NAME*.pdf"
+        working-directory: ./document/target
+        
+      # Update document properties copyright
+      - name: Update copyright
+        run: >
+          ${{ env.BUILD_UTILITY_EXE }} info "$env:MIS_DOCUMENT_FILE_NAME*.pdf"
+          --copyright "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_COPYRIGHT"
+        working-directory: ./document/target
 
       # Upload any artefact produced.
       - name: Upload Document

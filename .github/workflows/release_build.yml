@@ -21,6 +21,10 @@ env:
   MIS_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-mis,milestone'
 # Same ID for all builds  
   CONFLUENCE_ID:        '15663320'
+  
+  DOCUMENT_COPYRIGHT:   'CIP4 Organization, all rights reserved'
+
+  BUILD_UTILITY_EXE: c:\actions-runner\_work\_tool\document-processing\document-processing.exe   
 
 ## The remaining section is based upon those common to all draft documentation builds
 ## It has been modified to allow for three slightly different builds.
@@ -67,11 +71,18 @@ jobs:
       - name: Build Document
         timeout-minutes: 30
         run: >
-          python ..\builder\specbuilder.py $env:CUST_CONFIG_FILE
+          python ..\builder\scripts\specbuilder.py $env:CUST_CONFIG_FILE
           "$env:CUST_DOCUMENT_FILE_NAME $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "Release $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "Run-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document
+        
+      # Update document properties copyright
+      - name: Update copyright
+        run: >
+          ${{ env.BUILD_UTILITY_EXE }} info "$env:CUST_DOCUMENT_FILE_NAME*.pdf"
+          --copyright "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_COPYRIGHT"
+        working-directory: ./document/target
 
       # Upload any artefact produced.
       - name: Upload Document
@@ -131,11 +142,18 @@ jobs:
       - name: Build Document
         timeout-minutes: 30
         run: >
-          python ..\builder\specbuilder.py $env:MIS_CONFIG_FILE
+          python ..\builder\scripts\specbuilder.py $env:MIS_CONFIG_FILE
           "$env:MIS_DOCUMENT_FILE_NAME $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "Release $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "Run-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document
+        
+      # Update document properties copyright
+      - name: Update copyright
+        run: >
+          ${{ env.BUILD_UTILITY_EXE }} info "$env:MIS_DOCUMENT_FILE_NAME*.pdf"
+          --copyright "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_COPYRIGHT"
+        working-directory: ./document/target
 
       # Upload any artefact produced.
       - name: Upload Document
