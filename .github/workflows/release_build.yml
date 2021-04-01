@@ -8,7 +8,7 @@ name: Release Build
 env:
 # Common to all builds
   BUILD_NAME:           ICS-XJDF-QUALITYCONTROL
-  DOCUMENT_VERSION:     '2.0'
+  DOCUMENT_VERSION:     '2.2'
 # 'BOTH' version is not built for release documents
 #
 # 'Customer' parameters  

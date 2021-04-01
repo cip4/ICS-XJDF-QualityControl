@@ -9,7 +9,7 @@ name: Snapshot Build
 env:
 # Common to all builds
   BUILD_NAME:           ICS-XJDF-QUALITYCONTROL
-  DOCUMENT_VERSION:     '2.0'
+  DOCUMENT_VERSION:     '2.2'
 # 'BOTH' parameters  
   BOTH_DOCUMENT_FILE_NAME:   ICS XJDF QualityControl Both
   BOTH_CONFIG_FILE:          Build\ICS_XJDF_QualityControl_Both.ini
