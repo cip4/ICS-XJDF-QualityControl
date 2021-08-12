@@ -175,5 +175,6 @@ jobs:
           url: 'https://cip4.atlassian.net/wiki'
           username: ${{ secrets.ATLASSIAN_USER }}
           password: ${{ secrets.ATLASSIAN_TOKEN }}
+          contentId: ${{ env.CONFLUENCE_ID }}
           label:    ${{ env.FULL_CONFLUENCE_LABELS }}
           filePattern: 'document/target/*.pdf'
