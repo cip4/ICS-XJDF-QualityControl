@@ -12,11 +12,11 @@ env:
 # 'BOTH' version is not built for release documents
 #
 # 'Customer' parameters  
-  CUST_DOCUMENT_COVER_TITLE: QualityControl Customer ICS
+  CUST_DOCUMENT_COVER_TITLE: Quality Control Customer ICS
   CUST_CONFIG_FILE:          Build\ICS_XJDF_QualityControl_Customer.ini
   CUST_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-customer,milestone'
 # 'MIS' parameters  
-  MIS_DOCUMENT_COVER_TITLE: QualityControl MIS ICS
+  MIS_DOCUMENT_COVER_TITLE: Quality Control MIS ICS
   MIS_CONFIG_FILE:          Build\ICS_XJDF_QualityControl_MIS.ini
   MIS_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-mis,milestone'
 # Same ID for all builds  
@@ -26,11 +26,11 @@ env:
   DOCUMENT_METADATA_AUTHOR:     'CIP4 Organization'
   DOCUMENT_METADATA_KEYWORDS:   'Automation;CIM;CIP4;Graphic Arts;Graphics;Interface;Printing;Specification;Standard;Workflow;XML'
 # 'Customer' metadata
-  CUST_DOCUMENT_METADATA_TITLE:     'QualityControl Customer ICS'
-  CUST_DOCUMENT_METADATA_SUBJECT:   'QualityControl Customer Interoperability Conformance Specification for JDF'
+  CUST_DOCUMENT_METADATA_TITLE:     'Quality Control Customer ICS'
+  CUST_DOCUMENT_METADATA_SUBJECT:   'Quality Control Customer Interoperability Conformance Specification for JDF'
 # 'MIS' metadata
-  MIS_DOCUMENT_METADATA_TITLE:      'QualityControl MIS ICS'
-  MIS_DOCUMENT_METADATA_SUBJECT:    'QualityControl MIS Interoperability Conformance Specification for JDF'
+  MIS_DOCUMENT_METADATA_TITLE:      'Quality Control MIS ICS'
+  MIS_DOCUMENT_METADATA_SUBJECT:    'Quality Control MIS Interoperability Conformance Specification for JDF'
 
   BUILD_UTILITY_EXE: c:\actions-runner\_work\_tool\document-processing\document-processing.exe   
 
