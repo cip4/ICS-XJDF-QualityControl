@@ -24,20 +24,18 @@ env:
   MIS_CONFLUENCE_LABELS:    'ics-xjdf-qualitycontrol-mis,ics-draft'
 # Same ID for all builds  
   CONFLUENCE_ID:        '1560313992'
+
 # Common metadata to all builds  
   DOCUMENT_METADATA_COPYRIGHT:  'CIP4 Organization, all rights reserved'
-  DOCUMENT_METADATA_AUTHOR:     'CIP4 Organization'
-  DOCUMENT_METADATA_KEYWORDS:   'Automation;CIM;CIP4;Graphic Arts;Graphics;Interface;Printing;Specification;Standard;Workflow;XML'
+
 # 'BOTH' metadata
   BOTH_DOCUMENT_METADATA_TITLE:      'Quality Control Both ICS'
-  BOTH_DOCUMENT_METADATA_SUBJECT:    'Quality Control Both Interoperability Conformance Specification for JDF'
+
 # 'Customer' metadata
   CUST_DOCUMENT_METADATA_TITLE:      'Quality Control Customer ICS'
-  CUST_DOCUMENT_METADATA_SUBJECT:    'Quality Control Customer Interoperability Conformance Specification for JDF'
+
 # 'MIS' metadata
   MIS_DOCUMENT_METADATA_TITLE:      'Quality Control MIS ICS'
-  MIS_DOCUMENT_METADATA_SUBJECT:    'Quality Control MIS Interoperability Conformance Specification for JDF'
-
 
   BUILD_UTILITY_EXE: c:\actions-runner\_work\_tool\document-processing\document-processing.exe   
 
@@ -95,6 +93,10 @@ jobs:
           "$env:BOTH_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:BOTH_DOCUMENT_COVER_TITLE"
           "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$env:BOTH_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER" 
+          "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
+          "2000-$((Get-Date).ToString('yyyy'))"
           "Run-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document
         
@@ -104,18 +106,6 @@ jobs:
           ${{ env.BUILD_UTILITY_EXE }} draft "$env:BOTH_DOCUMENT_COVER_TITLE*.pdf"
         working-directory: ./document/target
         
-      # Update document meta-data properties
-      - name: Update Document Metadata
-        run: >
-          ${{ env.BUILD_UTILITY_EXE }} info "$env:BOTH_DOCUMENT_COVER_TITLE*.pdf"
-          --copyright "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
-          --title     "$env:BOTH_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER" 
-          --subject   "$env:BOTH_DOCUMENT_METADATA_SUBJECT"
-          --author    "$env:DOCUMENT_METADATA_AUTHOR"
-          --keywords  "$env:DOCUMENT_METADATA_KEYWORDS"
-          --version   "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
-        working-directory: ./document/target
-
       # Upload any artefact produced.
       - name: Upload Document
         uses: actions/upload-artifact@v2
@@ -173,6 +163,10 @@ jobs:
           "$env:CUST_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:CUST_DOCUMENT_COVER_TITLE"
           "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$env:CUST_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER" 
+          "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
+          "2000-$((Get-Date).ToString('yyyy'))"          
           "Run-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document
         
@@ -180,25 +174,6 @@ jobs:
       - name: Watermark pages
         run: >
           ${{ env.BUILD_UTILITY_EXE }} draft "$env:CUST_DOCUMENT_COVER_TITLE*.pdf"
-        working-directory: ./document/target
-        
-      # Update document meta-data properties
-      - name: Update Document Metadata
-        run: >
-          ${{ env.BUILD_UTILITY_EXE }} info "$env:CUST_DOCUMENT_COVER_TITLE*.pdf"
-          --copyright "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
-          --title     "$env:CUST_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER" 
-          --subject   "$env:CUST_DOCUMENT_METADATA_SUBJECT"
-          --author    "$env:DOCUMENT_METADATA_AUTHOR"
-          --keywords  "$env:DOCUMENT_METADATA_KEYWORDS"
-          --version   "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
-        working-directory: ./document/target
-        
-      # Update document properties copyright
-      - name: Update copyright
-        run: >
-          ${{ env.BUILD_UTILITY_EXE }} info "$env:CUST_DOCUMENT_FILE_NAME*.pdf"
-          --copyright "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_COPYRIGHT"
         working-directory: ./document/target
 
       # Upload any artefact produced.
@@ -258,6 +233,10 @@ jobs:
           "$env:MIS_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:MIS_DOCUMENT_COVER_TITLE"
           "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$env:MIS_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER" 
+          "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
+          "2000-$((Get-Date).ToString('yyyy'))"          
           "Run-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document
         
@@ -265,18 +244,6 @@ jobs:
       - name: Watermark pages
         run: >
           ${{ env.BUILD_UTILITY_EXE }} draft "$env:MIS_DOCUMENT_COVER_TITLE*.pdf"
-        working-directory: ./document/target
-        
-      # Update document meta-data properties
-      - name: Update Document Metadata
-        run: >
-          ${{ env.BUILD_UTILITY_EXE }} info "$env:MIS_DOCUMENT_COVER_TITLE*.pdf"
-          --copyright "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
-          --title     "$env:MIS_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER" 
-          --subject   "$env:MIS_DOCUMENT_METADATA_SUBJECT"
-          --author    "$env:DOCUMENT_METADATA_AUTHOR"
-          --keywords  "$env:DOCUMENT_METADATA_KEYWORDS"
-          --version   "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document/target
 
       # Upload any artefact produced.

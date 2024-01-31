@@ -1,14 +1,16 @@
-# This is the basic workflow to build release documentation
+# This is the basic workflow to build draft release documentation
+# Draft releases allow WG to 'tag' a particular state of the repository and equivalent
+# PDF. Useful if a document is to be discussed at an interop, but continues to be edited
 
 # !NOTE:
 # This build produces multiple versions of this document!!
-name: Release Build
+name: Draft Release Build
 ## This section contains ALL variable specific for this project ##
-# The VERSION is the main release number i.e. 1.7 or 2.1 (here for convenience but the git tag is actually used)
+# The VERSION is the main release number i.e. 1.7 or 2.1
 env:
 # Common to all builds
   BUILD_NAME:           ICS-XJDF-QUALITYCONTROL
-  #DOCUMENT_VERSION:     '1.7' not required for release build. Uses Tag of build.
+  DOCUMENT_VERSION:     '2.2'
 # 'BOTH' version is not built for release documents
 #
 # 'Customer' parameters  
@@ -40,7 +42,7 @@ env:
 on:
   push:
     tags:
-      - '2*'
+      - 'Draft*'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -75,21 +77,27 @@ jobs:
           token: ${{ steps.access_token.outputs.token }}
           path: builder
 
-      # Build the release document - note: no cover version required, part of cover title. 
+      # Build the document parameters
       - name: Build Document
         timeout-minutes: 30
         run: >
           python ..\builder\scripts\specbuilder.py $env:CUST_CONFIG_FILE
-          "$env:CUST_DOCUMENT_COVER_TITLE $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "$env:CUST_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$env:CUST_DOCUMENT_COVER_TITLE"
-          "Release: $(${env:GITHUB_REF}.replace('refs/tags/',''))"
-          "$env:CUST_DOCUMENT_METADATA_TITLE $(${env:GITHUB_REF}.replace('refs/tags/',''))"
-          "$(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "$env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "$env:CUST_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "$env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
           "2000-$((Get-Date).ToString('yyyy'))"
           "Run-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document
         
+      # Mark pages with draft watermark
+      - name: Watermark pages
+        run: >
+          ${{ env.BUILD_UTILITY_EXE }} draft "$env:CUST_DOCUMENT_COVER_TITLE*.pdf"
+        working-directory: ./document/target
+                
       # Upload any artefact produced.
       - name: Upload Document
         uses: actions/upload-artifact@v2
@@ -150,16 +158,22 @@ jobs:
         timeout-minutes: 30
         run: >
           python ..\builder\scripts\specbuilder.py $env:MIS_CONFIG_FILE
-          "$env:MIS_DOCUMENT_COVER_TITLE $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "$env:MIS_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$env:MIS_DOCUMENT_COVER_TITLE"
-          "Release: $(${env:GITHUB_REF}.replace('refs/tags/',''))"
-          "$env:MIS_DOCUMENT_METADATA_TITLE $(${env:GITHUB_REF}.replace('refs/tags/',''))"
-          "$(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "$env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "$env:MIS_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "$env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
           "2000-$((Get-Date).ToString('yyyy'))"
           "Run-$env:GITHUB_RUN_NUMBER"
         working-directory: ./document
-        
+
+      # Mark pages with draft watermark
+      - name: Watermark pages
+        run: >
+          ${{ env.BUILD_UTILITY_EXE }} draft "$env:CUST_DOCUMENT_COVER_TITLE*.pdf"
+        working-directory: ./document/target
+                        
       # Upload any artefact produced.
       - name: Upload Document
         uses: actions/upload-artifact@v2
