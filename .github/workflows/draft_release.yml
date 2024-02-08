@@ -84,7 +84,7 @@ jobs:
           python ..\builder\scripts\specbuilder.py $env:CUST_CONFIG_FILE
           "$env:CUST_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$env:CUST_DOCUMENT_COVER_TITLE"
-          "$env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "Version $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$env:CUST_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
@@ -160,7 +160,7 @@ jobs:
           python ..\builder\scripts\specbuilder.py $env:MIS_CONFIG_FILE
           "$env:MIS_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$env:MIS_DOCUMENT_COVER_TITLE"
-          "$env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "Version $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$env:MIS_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"

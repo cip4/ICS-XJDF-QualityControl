@@ -92,7 +92,7 @@ jobs:
           python ..\builder\scripts\specbuilder.py $env:BOTH_CONFIG_FILE
           "$env:BOTH_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:BOTH_DOCUMENT_COVER_TITLE"
-          "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "Version $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:BOTH_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER" 
           "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
@@ -162,7 +162,7 @@ jobs:
           python ..\builder\scripts\specbuilder.py $env:CUST_CONFIG_FILE
           "$env:CUST_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:CUST_DOCUMENT_COVER_TITLE"
-          "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "Version $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:CUST_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER" 
           "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
@@ -232,7 +232,7 @@ jobs:
           python ..\builder\scripts\specbuilder.py $env:MIS_CONFIG_FILE
           "$env:MIS_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:MIS_DOCUMENT_COVER_TITLE"
-          "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "Version $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$env:MIS_DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER" 
           "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
           "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
