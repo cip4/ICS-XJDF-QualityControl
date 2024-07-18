@@ -110,7 +110,7 @@ jobs:
       - name: Upload Document
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.BUILD_NAME }}-artifact
+          name: ${{ env.BUILD_NAME }}-build_both-artifact
           path: document/target/*.pdf
           
       # Upload to Confluence
@@ -180,7 +180,7 @@ jobs:
       - name: Upload Document
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.BUILD_NAME }}-artifact
+          name: ${{ env.BUILD_NAME }}-build_customer-artifact
           path: document/target/*.pdf
           
       # Upload to Confluence
@@ -250,7 +250,7 @@ jobs:
       - name: Upload Document
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.BUILD_NAME }}-artifact
+          name: ${{ env.BUILD_NAME }}-build_mis-artifact
           path: document/target/*.pdf
           
       # Upload to Confluence
