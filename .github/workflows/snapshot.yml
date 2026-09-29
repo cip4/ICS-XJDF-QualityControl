@@ -114,17 +114,6 @@ jobs:
         with:
           name: ${{ env.BUILD_NAME }}-build_both-artifact
           path: document/target/*.pdf
-          
-      # Upload to Confluence
-      - name: Confluence Upload
-        uses: cip4/action-confluence-upload@master
-        with:
-          url: 'https://cip4.atlassian.net/wiki'
-          username: ${{ secrets.ATLASSIAN_USER }}
-          password: ${{ secrets.ATLASSIAN_TOKEN }}
-          contentId: ${{ env.CONFLUENCE_ID }}
-          label: ${{ env.BOTH_CONFLUENCE_LABELS }}
-          filePattern: 'document/target/*.pdf'
 
   build_customer:
     runs-on: [framemaker-2026]
@@ -186,17 +175,6 @@ jobs:
         with:
           name: ${{ env.BUILD_NAME }}-build_customer-artifact
           path: document/target/*.pdf
-          
-      # Upload to Confluence
-      - name: Confluence Upload
-        uses: cip4/action-confluence-upload@master
-        with:
-          url: 'https://cip4.atlassian.net/wiki'
-          username: ${{ secrets.ATLASSIAN_USER }}
-          password: ${{ secrets.ATLASSIAN_TOKEN }}
-          contentId: ${{ env.CONFLUENCE_ID }}
-          label: ${{ env.CUST_CONFLUENCE_LABELS }}
-          filePattern: 'document/target/*.pdf'
 
   build_mis:
     runs-on: [framemaker-2026]
@@ -258,14 +236,3 @@ jobs:
         with:
           name: ${{ env.BUILD_NAME }}-build_mis-artifact
           path: document/target/*.pdf
-          
-      # Upload to Confluence
-      - name: Confluence Upload
-        uses: cip4/action-confluence-upload@master
-        with:
-          url: 'https://cip4.atlassian.net/wiki'
-          username: ${{ secrets.ATLASSIAN_USER }}
-          password: ${{ secrets.ATLASSIAN_TOKEN }}
-          contentId: ${{ env.CONFLUENCE_ID }}
-          label: ${{ env.MIS_CONFLUENCE_LABELS }}
-          filePattern: 'document/target/*.pdf'
