@@ -47,7 +47,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build_customer:
-    runs-on: [framemaker-2020]
+    runs-on: [framemaker-2026]
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -123,7 +123,7 @@ jobs:
           filePattern: 'document/target/*.pdf'
 
   build_mis:
-    runs-on: [framemaker-2020]
+    runs-on: [framemaker-2026]
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
