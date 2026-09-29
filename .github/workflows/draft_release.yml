@@ -95,9 +95,11 @@ jobs:
       # Mark pages with draft watermark
       - name: Watermark pages
         run: >
-          ${{ env.BUILD_UTILITY_EXE }} draft "$env:CUST_DOCUMENT_COVER_TITLE*.pdf"
-        working-directory: ./document/target
-                
+          python ..\builder\scripts\watermark.py
+          "$env:CUST_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "Run-$env:GITHUB_RUN_NUMBER"
+        working-directory: ./document
+                 
       # Upload any artefact produced.
       - name: Upload Document
         uses: actions/upload-artifact@v4
@@ -171,8 +173,10 @@ jobs:
       # Mark pages with draft watermark
       - name: Watermark pages
         run: >
-          ${{ env.BUILD_UTILITY_EXE }} draft "$env:CUST_DOCUMENT_COVER_TITLE*.pdf"
-        working-directory: ./document/target
+          python ..\builder\scripts\watermark.py
+          "$env:MIS_DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "Run-$env:GITHUB_RUN_NUMBER"
+        working-directory: ./document
                         
       # Upload any artefact produced.
       - name: Upload Document
